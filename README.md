@@ -1,2 +1,2 @@
 # misc-helpers
-Misc helpers 
+Misc helpers like break/build bitmask, print to console etc...
