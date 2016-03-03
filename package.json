@@ -1,0 +1,7 @@
+{
+  "name": "app-helpers",
+  "version": "0.0.1",
+  "dependencies":{
+    "default":"https://github.com/bfunc/default.css"
+  }
+}
