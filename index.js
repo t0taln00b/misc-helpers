@@ -2,9 +2,10 @@
 
 (function(){
 
-	// date-format-lite adds format(mask, [zone]) method to native Date.prototype. > https://www.npmjs.com/package/date-format-lite
+	//require('date-format-lite');    // date-format-lite adds format(mask, [zone]) method to native Date.prototype. > https://www.npmjs.com/package/date-format-lite
+	//Date.masks.default = '<YYYY-MM-DD @ hh:mm:ss>';
 
-	const STR_LEN          = 62,
+	const STR_LEN          = 65,
 	      SHOW_DATE        = false,
 	      DUPLICATE_ERRORS = false, // Print error messages in both error and out logs
 	      helpers          = {
@@ -20,21 +21,23 @@
 		      error: logError,
 
 		      cleanUpString: cleanUpString,
+		      replaceInStringBetween: replaceInStringBetween,
 
 		      breakBitwise: breakBitwise,
-		      buildBitwise: buildBitwise
+		      buildBitwise: buildBitwise,
+
+		      fromHex: fromHex,
+		      toHex: toHex,
+
+		      padString: padString
+		      //trimStringsInObject: searchAndTrimLongStrings
 
 	      };
 
 
 	module.exports =
 		Object.assign(
-			helpers,
-			{
-				/*
-				 additionalHelpers: require('./additionalHelpers')
-				 */
-			}
+			helpers
 		);
 
 	// Logging
@@ -67,6 +70,7 @@
 		if( DUPLICATE_ERRORS ) console.log.apply(console, args);
 	}
 
+
 	// Process
 
 	function restartServer(err){
@@ -83,8 +87,11 @@
 			logInfo('[i] You should set the ' + name + ' environment variable, using default:', alternativeValue);
 			return alternativeValue;
 		}
+
+		logInfo('[i]', name, '=', process.env[name]);
 		return process.env[name];
 	}
+
 
 	// Bitwise
 
@@ -108,15 +115,23 @@
 				number |= Math.pow(2, i);
 			}
 		}
-
 		return number;
 	}
 
+
 	// Misc
+
+	function fromHex(hex){
+		return parseInt(hex, 16)
+	}
+
+	function toHex(int){
+		return parseInt(int).toString(16).toUpperCase();
+	}
 
 	function cleanUpString(str){
 		if( !str || typeof str.split !== 'function' ) return str;
-		return str.split(/\r\n|\r|\n/g)[0];  // strips new line character 0a at the end of string
+		return str.split(/\r\n|\r|\n/g)[0];     // strips new line character 0a at the end of string
 	}
 
 	function searchAndTrimLongStrings(args){
@@ -131,8 +146,16 @@
 		}
 	}
 
+	function replaceInStringBetween(str, start, end, what){
+		return str.substring(0, start) + what + str.substring(end);
+	}
+
 	function getCurrentDate(){
 		return new Date();//.format();
+	}
+
+	function padString(str, paddingValue){
+		return String(paddingValue + str).slice(-paddingValue.length);
 	}
 
 })();
